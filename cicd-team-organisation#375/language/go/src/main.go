@@ -6,32 +6,15 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/getsentry/sentry-go"
 )
 
-const (
-	defaultHost = "glitchtip:8000"
-	defaultKey  = "<project_key>"
-)
-
-var (
-	glitchtipHost       = getEnv("GLITCHTIP_HOST", defaultHost)
-	glitchtipProjectKey = getEnv("GLITCHTIP_PROJECT_KEY", defaultKey)
-	glitchtipDSN        = "http://" + glitchtipProjectKey + "@" + glitchtipHost + "/1"
-)
-
-func getEnv(key, fallback string) string {
-	if value := os.Getenv(key); value != "" {
-		return value
-	}
-	return fallback
-}
-
 func main() {
 	err := sentry.Init(sentry.ClientOptions{
-		Dsn: glitchtipDSN,
+		Dsn:         os.Getenv("GLITCHTIP_DSN"),
+		Environment: "development",
+		Release:     "glitchtip-go@1.0.0",
 	})
 	if err != nil {
 		log.Fatalf("Sentry Init fehlgeschlagen: %v", err)
@@ -54,7 +37,10 @@ func main() {
 
 	http.HandleFunc("/error", func(w http.ResponseWriter, r *http.Request) {
 		sentry.CaptureMessage("💥 Testfehler aus Go")
-		panic("💥 absichtlicher Fehler")
+		fmt.Fprintln(w, "Fehler wurde ausgelöst.")
+		go func() {
+			panic("💥 absichtlicher Fehler")
+		}()
 	})
 
 	http.HandleFunc("/exception", func(w http.ResponseWriter, r *http.Request) {
@@ -64,8 +50,4 @@ func main() {
 
 	log.Println("🚀 Server läuft auf http://localhost:8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
-
-	sentry.CaptureException(errors.New("my error"))
-
-	sentry.Flush(time.Second * 5)
 }

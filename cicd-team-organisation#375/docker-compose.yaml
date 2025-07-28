@@ -47,8 +47,7 @@ services:
       dockerfile: Dockerfile
     container_name: go-glitchtip-test
     environment:
-      - GLITCHTIP_HOST=glitchtip:8000
-      - GLITCHTIP_PROJECT_KEY=71f2680c229947bcaac118a126582b28
+      - GLITCHTIP_DSN=http://11ff5ce66dde48449a3263ad189e79de@glitchtip:8000/3
     ports:
       - "8080:8080"
     depends_on:
