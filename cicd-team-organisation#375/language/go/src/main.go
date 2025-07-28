@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/getsentry/sentry-go"
 )
@@ -37,14 +38,14 @@ func main() {
 
 	http.HandleFunc("/error", func(w http.ResponseWriter, r *http.Request) {
 		sentry.CaptureMessage("💥 Testfehler aus Go")
-		fmt.Fprintln(w, "Fehler wurde ausgelöst.")
-		go func() {
-			panic("💥 absichtlicher Fehler")
-		}()
+		sentry.Flush(time.Second * 2)
+		fmt.Fprintln(w, "Fehler wurde ausgelöst und wird jetzt ausgelöst.")
+		panic("💥 absichtlicher Fehler")
 	})
 
 	http.HandleFunc("/exception", func(w http.ResponseWriter, r *http.Request) {
 		sentry.CaptureException(errors.New("⚠️ Exception ausgelöst über /exception"))
+		sentry.Flush(time.Second * 2)
 		fmt.Fprintln(w, "Exception gesendet.")
 	})
 
