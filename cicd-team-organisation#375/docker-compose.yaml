@@ -1,0 +1,59 @@
+version: "3.9"
+
+services:
+  glitchtip:
+    image: glitchtip/glitchtip:latest
+    container_name: glitchtip
+    user: "1000:1000"
+    ports:
+      - "3000:8000"
+    environment:
+      - SECRET_KEY=changeme
+      - DATABASE_URL=postgres://glitchtip:glitchtip@db:5432/glitchtip
+      - EMAIL_URL=consolemail://
+      - REDIS_URL=redis://redis:6379/0
+      - GLITCHTIP_DOMAIN=http://localhost:3000
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - glitchtip_static:/code/static
+    command: >
+      /bin/sh -c "
+      python manage.py migrate &&
+      python manage.py collectstatic --noinput --no-post-process &&
+      uwsgi --http :8000 --module glitchtip.wsgi:application"
+    restart: unless-stopped
+
+  db:
+    image: postgres:15
+    container_name: glitchtip-db
+    environment:
+      - POSTGRES_DB=glitchtip
+      - POSTGRES_USER=glitchtip
+      - POSTGRES_PASSWORD=glitchtip
+    volumes:
+      - glitchtip_pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  redis:
+    image: redis:7
+    container_name: glitchtip-redis
+    restart: unless-stopped
+
+  go-app:
+    build:
+      context: ./language/go
+      dockerfile: Dockerfile
+    container_name: go-glitchtip-test
+    environment:
+      - GLITCHTIP_HOST=glitchtip:8000
+      - GLITCHTIP_PROJECT_KEY=71f2680c229947bcaac118a126582b28
+    ports:
+      - "8080:8080"
+    depends_on:
+      - glitchtip
+
+volumes:
+  glitchtip_pgdata:
+  glitchtip_static:
