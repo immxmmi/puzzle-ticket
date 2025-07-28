@@ -21,6 +21,10 @@ func main() {
 		log.Fatalf("Sentry Init fehlgeschlagen: %v", err)
 	}
 
+	if !sentry.Flush(time.Second * 2) {
+		log.Println("⚠️ Fehler konnten nicht gesendet werden.")
+	}
+
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html")
 		fmt.Fprint(w, `
@@ -40,7 +44,9 @@ func main() {
 		sentry.CaptureMessage("💥 Testfehler aus Go")
 		sentry.Flush(time.Second * 2)
 		fmt.Fprintln(w, "Fehler wurde ausgelöst und wird jetzt ausgelöst.")
-		panic("💥 absichtlicher Fehler")
+		err := errors.New("💥 absichtlicher Fehler")
+		sentry.CaptureException(err)
+		panic(err)
 	})
 
 	http.HandleFunc("/exception", func(w http.ResponseWriter, r *http.Request) {
