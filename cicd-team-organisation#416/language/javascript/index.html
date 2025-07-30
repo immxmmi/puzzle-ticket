@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>GlitchTip JS Test</title>
+  <script src="https://browser.sentry-cdn.com/7.60.0/bundle.min.js" crossorigin="anonymous"></script>
+  <script>
+    // GlitchTip JavaScript error tracking via Sentry SDK
+    Sentry.init({
+      dsn: "https://473459e27d214bc39d7ac0fbc784d9e1@glitchtip-stg.puzzle.ch/8"
+      ,
+      tracesSampleRate: 0.01,
+    });
+
+    // Testfehler auslösen
+    myUndefinedFunction();
+  </script>
+</head>
+<body>
+  <h1>GlitchTip JavaScript Test</h1>
+</body>
+</html>

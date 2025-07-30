@@ -1,0 +1,26 @@
+# Java
+/language/java/target/
+
+# Go
+/language/go/go.sum
+
+# Node.js / JavaScript
+/language/javascript/node_modules/
+
+# Python
+/language/python/__pycache__/
+*.pyc
+
+# Ruby
+/language/ruby/Gemfile.lock
+
+# Rust
+/language/rust/target/
+
+# IDEs & OS
+.DS_Store
+*.swp
+
+# Editor configs
+.vscode/
+.idea/

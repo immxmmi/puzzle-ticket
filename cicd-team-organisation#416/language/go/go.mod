@@ -1,4 +1,4 @@
-module github.com/momo/go-glitchtip-test
+module glitch-go
 
 go 1.24.5
 
