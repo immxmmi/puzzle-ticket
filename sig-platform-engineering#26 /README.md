@@ -54,15 +54,63 @@ Dieser Schritt dient dazu, vorhandenes Puzzle-Wissen zu nutzen und Doppelarbeit 
 
 ---
 
-## ❓ Fragestellungen
 
-### Allgemein & strategisch
 
-- Was ist Apache Kafka genau – und wofür wird es eingesetzt?
-- In welchen Szenarien ist Kafka besonders geeignet?
-- Ist Kafka aktuell das "Tool to go" für Event-driven Architekturen?
-- Welche Alternativen zu Kafka gibt es – und wann sind sie sinnvoller?
-- Welche Vor- und Nachteile bringt Kafka im Vergleich zu anderen Message-Brokern?
+#### 🔍 Was ist Apache Kafka genau – und wofür wird es eingesetzt?
+
+Apache Kafka ist eine skalierbare Event-Streaming-Plattform, die für hohe Durchsatzraten und niedrige Latenz bei der Datenverarbeitung entwickelt wurde. Sie ermöglicht:
+
+- Hochperformante Datenübertragung zwischen Microservices oder Anwendungen
+- Garantierte Nachrichtenreihenfolge
+- Wiederholbare Verarbeitung durch Nachrichten-Replay
+- Log-Komprimierung zur Optimierung des Speicherbedarfs
+- Horizontale Skalierung und Datenreplikation zur Fehlertoleranz
+- Lange Datenaufbewahrung für historische Analysen oder Replays
+
+
+
+
+### Kafka ist besonders geeignet für Event-driven Architekturen, Event Sourcing, Monitoring, Log-Aggregation und Stream Processing in Echtzeit.
+
+| Szenario                         | Beschreibung                                                                                   |
+|----------------------------------|-----------------------------------------------------------------------------------------------|
+| **Event-driven Architectures**   | Lose gekoppelte Systeme reagieren auf Ereignisse in Echtzeit – Kafka ist der zentrale Event-Bus. |
+| **Event Sourcing**               | Applikationszustände werden über Ereignisse rekonstruierbar gespeichert.                        |
+| **Log-Aggregation**              | Systeme (z. B. Microservices) senden Logs an Kafka; zentral gesammelt & weiterverarbeitet.     |
+| **Monitoring & Metrics**         | Datenströme wie Metriken oder Traces können ingestet und verarbeitet werden.                   |
+| **Stream Processing**            | Echtzeitverarbeitung großer Datenmengen (z. B. mit Kafka Streams, Flink).                      |
+| **Data Ingestion Pipelines**     | Kafka als Puffer & Verteiler für heterogene Datenquellen (z. B. IoT, Web-Tracking, DB-Changefeeds). |
+| **Messaging zwischen Systemen**  | Zuverlässige, skalierbare Kommunikation mit garantierter Reihenfolge.                          |
+| **Audit / Compliance Logging**   | Unveränderliche Loghistorien für regulatorische Zwecke.                                        |
+
+
+### 👉 Ist Apache Kafka weiterhin das "Tool to go" für Event-driven Architekturen – oder wann lohnen sich Alternativen wie Redpanda, NATS, RabbitMQ, Pulsar oder MQTT?
+
+Apache Kafka ist weit verbreitet, aber nicht immer die beste Wahl:  
+- **Redpanda**: Kafka-kompatibel, aber leichter, schneller und ohne JVM – ideal für latenzkritische oder ressourcenschwache Umgebungen  
+- **Apache Pulsar**: Unterstützt Multi-Tenant-Architekturen und Trennung von Storage & Compute  
+- **RabbitMQ**: Traditioneller Queue-basierter Broker mit starker Unterstützung für komplexes Routing  
+- **NATS**: Extrem leichtgewichtig, ideal für einfache Messaging-Szenarien oder Edge-Umgebungen  
+- **MQTT**: Für IoT/Embedded-Anwendungen mit minimalem Overhead
+
+Die Wahl hängt stark vom Use Case ab – Kafka punktet bei großen Datenmengen, Replays und komplexem Event-Streaming.
+
+
+
+### Welche Vor- und Nachteile bringt Kafka im Vergleich zu anderen Message-Brokern?
+
+| Broker        | Persistente Speicherung | Replaying | Durchsatz | Latenz | Ressourcenverbrauch | Setup-Komplexität | Besonderheiten |
+|---------------|--------------------------|-----------|-----------|--------|----------------------|--------------------|----------------|
+| **Kafka**     | ✅ Ja                    | ✅ Ja     | 🔼 Hoch   | 🔽 Mittel | 🔼 Hoch              | 🔼 Hoch            | Reife Plattform mit großer Community |
+| **Redpanda**  | ✅ Ja                    | ✅ Ja     | 🔼 Hoch   | 🔽 Sehr niedrig | 🔽 Gering          | 🔽 Mittel          | Kafka-kompatibel, kein JVM, C++-basiert |
+| **Pulsar**    | ✅ Ja (tiered storage)   | ✅ Ja     | 🔼 Hoch   | 🔽 Mittel | 🔼 Mittel            | 🔼 Hoch            | Trennung von Compute und Storage |
+| **RabbitMQ**  | 🟡 Eingeschränkt         | ❌ Nein   | 🔽 Mittel | 🔽 Niedrig | 🔽 Gering            | 🔽 Niedrig         | Komplexes Routing, AMQP |
+| **NATS**      | ❌ Nein (nur mit JetStream) | 🟡 Teilweise | 🔼 Hoch   | 🔽 Sehr niedrig | 🔽 Sehr gering    | 🔽 Sehr gering     | Extrem leichtgewichtig |
+| **MQTT**      | ❌ Nein                  | ❌ Nein   | 🔽 Gering | 🔽 Sehr niedrig | 🔽 Sehr gering      | 🔽 Sehr gering     | Speziell für IoT, minimales Protokoll |
+
+
+### Wie Funkitoniert Kafka Primitiv
+
 
 ### Architektur & Betrieb
 
